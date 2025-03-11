@@ -32,7 +32,7 @@ EmployeesController.deleteEmployees = async (req, res) => {
 //update
 
 EmployeesController.updateEmployees = async (req, res) => {
-    const {name, lastname, birthday, email,password,telephone,dui,isVerified} = req.body;
+    const {name, lastname, birthday, email,address,hireDate,password,telephone,dui,isssNumber,isVerified} = req.body;
     const updatedEmployees = await employeesModel.findByIdAndUpdate(req.params.id, {name, lastname, birthday, email,address,hireDate,password,telephone,dui,isssNumber,isVerified} , {new: true} )
 
     res.json({message: "Updated employees"})
