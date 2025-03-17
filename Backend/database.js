@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
+import {config} from "./src/config.js"
 
-const URI = "mongodb://localhost:27017/cocacolaDB"
 
-mongoose.connect(URI)
+mongoose.connect(config.db.URI);
 
 
 const connection = mongoose.connection;

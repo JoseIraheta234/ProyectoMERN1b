@@ -4,6 +4,8 @@ import ClientsRoutes from "./src/routes/Clients.js"
 import EmployeesRoutes from "./src/routes/Employees.js";
 import SucursalesRoutes from "./src/routes/sucursales.js";
 import CategoriesRoutes from "./src/routes/Categories.js";
+import ReviewsRoutes from "./src/routes/reviews.js";
+import EvaluacionesRoutes from "./src/routes/Evaluaciones.js";
 
 const app = express();
 
@@ -14,6 +16,8 @@ app.use("/api/Clients", ClientsRoutes)
 app.use("/api/Employees", EmployeesRoutes)
 app.use("/api/Sucursales",SucursalesRoutes )
 app.use("/api/Categories", CategoriesRoutes )
+app.use("/api/reviews", ReviewsRoutes)
+app.use("/api/Evaluaciones", EvaluacionesRoutes)
 
 export default app;
 
