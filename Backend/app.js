@@ -6,6 +6,8 @@ import SucursalesRoutes from "./src/routes/sucursales.js";
 import CategoriesRoutes from "./src/routes/Categories.js";
 import ReviewsRoutes from "./src/routes/reviews.js";
 import EvaluacionesRoutes from "./src/routes/Evaluaciones.js";
+import RegisterEmployeesRoutes from "./src/routes/registerEmployees.js"
+import LoginRoutes from "./src/routes/login.js"
 
 const app = express();
 
@@ -18,6 +20,8 @@ app.use("/api/Sucursales",SucursalesRoutes )
 app.use("/api/Categories", CategoriesRoutes )
 app.use("/api/reviews", ReviewsRoutes)
 app.use("/api/Evaluaciones", EvaluacionesRoutes)
+app.use("/api/registerEmployees", RegisterEmployeesRoutes)
+app.use("/api/login", LoginRoutes)
 
 export default app;
 
