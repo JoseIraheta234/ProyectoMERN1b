@@ -9,6 +9,7 @@ import EvaluacionesRoutes from "./src/routes/Evaluaciones.js";
 import RegisterEmployeesRoutes from "./src/routes/registerEmployees.js"
 import LoginRoutes from "./src/routes/login.js"
 import cookieParser from "cookie-parser";
+import LogOutRoutes from "./src/routes/LogOut.js"
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use("/api/reviews", ReviewsRoutes)
 app.use("/api/Evaluaciones", EvaluacionesRoutes)
 app.use("/api/registerEmployees", RegisterEmployeesRoutes)
 app.use("/api/login", LoginRoutes)
+app.use("/api/logout", LogOutRoutes)
 
 export default app;
 
