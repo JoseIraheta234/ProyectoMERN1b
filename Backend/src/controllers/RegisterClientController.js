@@ -77,8 +77,8 @@ registerClientsController.register = async (req, res) => {
             res.json({message: "Email verified successfully"});
             res.clearCookie("verificationToken");
         } catch (error) {
-            res.jon({message: "error"})
-        }
+            res.json({message: "error"})
+        }   
 };
 
 export default registerClientsController;
