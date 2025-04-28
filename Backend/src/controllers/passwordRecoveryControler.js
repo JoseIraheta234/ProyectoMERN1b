@@ -54,3 +54,31 @@ passwordRecoveryController.requestCode = async (req, res) => {
         console.log("error" + error);
     }
 }
+
+passwordRecoveryController.verifyCode = async (req, res) => {
+    
+    const  {code} = req.body;
+
+    try {
+        const token = req.cookies.tokenRecoveryCode;
+
+        const decoded = jsonwebtoken.verify(token, config.JWT.secret);
+
+        if (decoded.code !== code) {
+            return res.json({message: "Invalid code"});
+        }
+
+        const newToken = jsonwebtoken.sign(
+            {email: decoded.email, code: decoded.code, userType: decoded.userType, verified: true},
+            config.JWT.secret,
+            {expiresIn: "25m"}
+        )
+
+        res.cookie("tokenRecoveryCode", newToken, {maxAge: 25 * 60 * 1000})
+        res.json({message: "Code verified"})
+    } catch (error) {
+        console.log("error" + error);
+    }
+}
+
+export default passwordRecoveryController;
