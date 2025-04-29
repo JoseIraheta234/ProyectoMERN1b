@@ -5,6 +5,6 @@ import passwordRecoveryController from "../controllers/passwordRecoveryControler
 
  router.route("/requestCode").post(passwordRecoveryController.requestCode);
  router.route("/verigyCode").post(passwordRecoveryController.verifyCode);
- //router.route("/newCode").post(passwordRecoveryController);
+ router.route("/newCode").post(passwordRecoveryController.newPassword);
 
  export default router;
