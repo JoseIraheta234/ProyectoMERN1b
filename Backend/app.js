@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors"; // Necesitas instalar: npm install cors
 import productsRoutes from "./src/routes/Products.js"
 import ClientsRoutes from "./src/routes/Clients.js"
 import EmployeesRoutes from "./src/routes/Employees.js";
@@ -16,23 +17,45 @@ import BlogRoutes from "./src/routes/Blog.js"
 
 const app = express();
 
-app.use(express.json())
-app.use(cookieParser())
+// Configuración de CORS
+app.use(cors({
+  origin: ['http://localhost:4000', 'http://localhost:5173'], // Puertos comunes de React/Vite
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
+}));
 
-app.use("/api/Products", productsRoutes)
-app.use("/api/Clients", ClientsRoutes)
-app.use("/api/Employees", EmployeesRoutes)
-app.use("/api/Sucursales",SucursalesRoutes )
-app.use("/api/Categories", CategoriesRoutes )
-app.use("/api/reviews", ReviewsRoutes)
-app.use("/api/Evaluaciones", EvaluacionesRoutes)
-app.use("/api/registerEmployees", RegisterEmployeesRoutes)
-app.use("/api/login", LoginRoutes)
-app.use("/api/logout", LogOutRoutes)
-app.use("/api/registerClients", RegisterClientsRoutes)
-app.use("/api/passwordRecovery", PasswordRecoveryRoutes)
-app.use("/api/Blog",BlogRoutes)
+// Middlewares
+app.use(express.json());
+app.use(cookieParser());
+
+// Rutas
+app.use("/api/Products", productsRoutes);
+app.use("/api/Clients", ClientsRoutes);
+app.use("/api/Employees", EmployeesRoutes);
+app.use("/api/Sucursales", SucursalesRoutes);
+app.use("/api/Categories", CategoriesRoutes);
+app.use("/api/reviews", ReviewsRoutes);
+app.use("/api/Evaluaciones", EvaluacionesRoutes);
+app.use("/api/registerEmployees", RegisterEmployeesRoutes);
+app.use("/api/login", LoginRoutes);
+app.use("/api/logout", LogOutRoutes);
+app.use("/api/registerClients", RegisterClientsRoutes);
+app.use("/api/passwordRecovery", PasswordRecoveryRoutes);
+app.use("/api/Blog", BlogRoutes);
+
+// Middleware de manejo de errores
+app.use((error, req, res, next) => {
+  console.error('Error:', error);
+  res.status(500).json({ 
+    message: 'Error interno del servidor',
+    error: process.env.NODE_ENV === 'production' ? {} : error.message 
+  });
+});
+
+// Middleware para rutas no encontradas
+app.use('*', (req, res) => {
+  res.status(404).json({ message: 'Ruta no encontrada' });
+});
 
 export default app;
-
-

@@ -1,14 +1,22 @@
 // services/productsAPI.js
-const API_BASE_URL = 'http://localhost:4000/api/products'; // Ajusta la URL según tu backend
+const API_BASE_URL = 'http://localhost:4000/api/Products'; // Corregido: Products con P mayúscula
 
 class ProductsAPI {
   // Obtener todos los productos
   static async getProducts() {
     try {
-      const response = await fetch(API_BASE_URL);
+      const response = await fetch(API_BASE_URL, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+        const errorData = await response.text();
+        throw new Error(`Error ${response.status}: ${errorData}`);
       }
+      
       return await response.json();
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -28,8 +36,10 @@ class ProductsAPI {
       });
       
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+        const errorData = await response.text();
+        throw new Error(`Error ${response.status}: ${errorData}`);
       }
+      
       return await response.json();
     } catch (error) {
       console.error('Error creating product:', error);
@@ -49,8 +59,10 @@ class ProductsAPI {
       });
       
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+        const errorData = await response.text();
+        throw new Error(`Error ${response.status}: ${errorData}`);
       }
+      
       return await response.json();
     } catch (error) {
       console.error('Error updating product:', error);
@@ -62,12 +74,17 @@ class ProductsAPI {
   static async deleteProduct(id) {
     try {
       const response = await fetch(`${API_BASE_URL}/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
       });
       
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+        const errorData = await response.text();
+        throw new Error(`Error ${response.status}: ${errorData}`);
       }
+      
       return await response.json();
     } catch (error) {
       console.error('Error deleting product:', error);

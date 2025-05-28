@@ -1,5 +1,5 @@
 // hooks/useProducts.js
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import ProductsAPI from '../services/productsAPI';
 
 export const useProducts = () => {
@@ -8,30 +8,35 @@ export const useProducts = () => {
   const [error, setError] = useState(null);
 
   // Cargar productos
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const data = await ProductsAPI.getProducts();
-      setProducts(data);
+      setProducts(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError(err.message);
+      console.error('Error al cargar productos:', err);
+      setError(err.message || 'Error al cargar productos');
+      setProducts([]);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   // Crear producto
   const createProduct = async (productData) => {
     setLoading(true);
     setError(null);
     try {
-      await ProductsAPI.createProduct(productData);
+      const response = await ProductsAPI.createProduct(productData);
+      console.log('Producto creado:', response);
       await fetchProducts(); // Recargar lista
-      return { success: true };
+      return { success: true, data: response };
     } catch (err) {
-      setError(err.message);
-      return { success: false, error: err.message };
+      console.error('Error al crear producto:', err);
+      const errorMessage = err.message || 'Error al crear producto';
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
     } finally {
       setLoading(false);
     }
@@ -39,15 +44,24 @@ export const useProducts = () => {
 
   // Actualizar producto
   const updateProduct = async (id, productData) => {
+    if (!id) {
+      const errorMessage = 'ID del producto es requerido';
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
+    }
+
     setLoading(true);
     setError(null);
     try {
-      await ProductsAPI.updateProduct(id, productData);
+      const response = await ProductsAPI.updateProduct(id, productData);
+      console.log('Producto actualizado:', response);
       await fetchProducts(); // Recargar lista
-      return { success: true };
+      return { success: true, data: response };
     } catch (err) {
-      setError(err.message);
-      return { success: false, error: err.message };
+      console.error('Error al actualizar producto:', err);
+      const errorMessage = err.message || 'Error al actualizar producto';
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
     } finally {
       setLoading(false);
     }
@@ -55,23 +69,38 @@ export const useProducts = () => {
 
   // Eliminar producto
   const deleteProduct = async (id) => {
+    if (!id) {
+      const errorMessage = 'ID del producto es requerido';
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
+    }
+
     setLoading(true);
     setError(null);
     try {
-      await ProductsAPI.deleteProduct(id);
+      const response = await ProductsAPI.deleteProduct(id);
+      console.log('Producto eliminado:', response);
       await fetchProducts(); // Recargar lista
-      return { success: true };
+      return { success: true, data: response };
     } catch (err) {
-      setError(err.message);
-      return { success: false, error: err.message };
+      console.error('Error al eliminar producto:', err);
+      const errorMessage = err.message || 'Error al eliminar producto';
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
     } finally {
       setLoading(false);
     }
   };
 
+  // Limpiar error
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
+  // Efecto para cargar productos al montar el componente
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   return {
     products,
@@ -80,6 +109,7 @@ export const useProducts = () => {
     createProduct,
     updateProduct,
     deleteProduct,
-    refreshProducts: fetchProducts
+    refreshProducts: fetchProducts,
+    clearError
   };
 };
